@@ -10,12 +10,11 @@ interface ForegroundElementsProps {
   lowPower?: boolean;
 }
 
-interface GrassBladeData {
+interface FlowerData {
   x: number;
   y: number;
   z: number;
-  scaleX: number;
-  scaleY: number;
+  scale: number;
   rotY: number;
   phase: number;
 }
@@ -40,55 +39,13 @@ function createAlpineRockGeometry(seed: number, radius = 1): THREE.BufferGeometr
   return geo;
 }
 
-function createForegroundGrassClump(): THREE.BufferGeometry {
-  const blades = [
-    { ox: 0, oz: 0, ry: 0.2, tilt: 0.16, h: 0.26, w: 0.044 },
-    { ox: -0.04, oz: 0.02, ry: 1.4, tilt: 0.28, h: 0.21, w: 0.038 },
-    { ox: 0.04, oz: -0.02, ry: 2.7, tilt: 0.26, h: 0.22, w: 0.04 },
-    { ox: -0.02, oz: -0.04, ry: 3.9, tilt: 0.3, h: 0.18, w: 0.036 },
-    { ox: 0.03, oz: 0.03, ry: 5.1, tilt: 0.24, h: 0.2, w: 0.038 },
-  ];
-  const positions: number[] = [];
-  const normals: number[] = [];
-  const indices: number[] = [];
-  let offset = 0;
-
-  for (const b of blades) {
-    const cosY = Math.cos(b.ry);
-    const sinY = Math.sin(b.ry);
-    const hw = b.w * 0.5;
-    const lean = Math.sin(b.tilt) * b.h;
-    const pts = [
-      [-hw, 0, 0],
-      [hw, 0, 0],
-      [-hw * 0.45, b.h * 0.52, lean * 0.35],
-      [hw * 0.45, b.h * 0.52, lean * 0.35],
-      [0, b.h, lean],
-    ];
-    for (const [lx, ly, lz] of pts) {
-      positions.push(b.ox + lx * cosY - lz * sinY, ly, b.oz + lx * sinY + lz * cosY);
-      normals.push(sinY * 0.3, 0.9, cosY * 0.3);
-    }
-    indices.push(offset, offset + 1, offset + 2, offset + 1, offset + 3, offset + 2, offset + 2, offset + 3, offset + 4);
-    offset += 5;
-  }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-  geo.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
-  geo.setIndex(indices);
-  geo.computeVertexNormals();
-  return geo;
-}
-
 export function ForegroundElements({
   scrollProgressRef,
   lowPower = false,
 }: ForegroundElementsProps) {
-  const grassMeshRef = useRef<THREE.InstancedMesh>(null);
   const flowerMeshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const timeRef = useRef(0);
-  const grassClumpGeo = useMemo(() => createForegroundGrassClump(), []);
 
   const rockGeos = useMemo(
     () => ({
@@ -100,52 +57,27 @@ export function ForegroundElements({
     []
   );
 
-  const { grassData, flowerData } = useMemo(() => {
+  const flowerData = useMemo(() => {
     const rand = createSeededRandom(8842);
-    const grassCount = lowPower ? 150 : 320;
-    const flowerCount = lowPower ? 26 : 52;
+    const flowerCount = lowPower ? 18 : 34;
 
-    const grass: GrassBladeData[] = [];
-    for (let i = 0; i < grassCount; i++) {
-      // Cluster along the foreground overlook edge & across the grassy ledge
-      const zone = rand();
-      const x =
-        zone < 0.4
-          ? -3.8 + rand() * 3.5
-          : zone < 0.8
-            ? 0.4 + rand() * 3.6
-            : -1.4 + rand() * 2.8;
-      const z = 0.4 + rand() * 4.0;
-      const y = -0.8 - (z - 1.2) * 0.08 + (rand() - 0.5) * 0.16;
-      grass.push({
-        x,
-        y,
-        z,
-        scaleX: 0.78 + rand() * 0.6,
-        scaleY: 0.55 + rand() * 0.55,
-        rotY: rand() * Math.PI * 2,
-        phase: rand() * Math.PI * 2,
-      });
-    }
-
-    const flowers: GrassBladeData[] = [];
+    const flowers: FlowerData[] = [];
     for (let i = 0; i < flowerCount; i++) {
       const side = rand() > 0.45 ? -1 : 1;
-      const x = side < 0 ? -3.1 + rand() * 2.7 : 0.7 + rand() * 2.8;
-      const z = 0.9 + rand() * 3.1;
-      const y = -0.62 - (z - 1.2) * 0.08 + rand() * 0.12;
+      const x = side < 0 ? -3.1 + rand() * 2.5 : 0.9 + rand() * 2.6;
+      const z = 1.0 + rand() * 2.8;
+      const y = -0.68 - (z - 1.2) * 0.08 + rand() * 0.12;
       flowers.push({
         x,
         y,
         z,
-        scaleX: 0.7 + rand() * 0.55,
-        scaleY: 0.7 + rand() * 0.55,
+        scale: 0.7 + rand() * 0.5,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
       });
     }
 
-    return { grassData: grass, flowerData: flowers };
+    return flowers;
   }, [lowPower]);
 
   useFrame((_, delta) => {
@@ -153,28 +85,13 @@ export function ForegroundElements({
     const t = timeRef.current;
     const scroll = scrollProgressRef.current ?? 0;
 
-    if (grassMeshRef.current) {
-      for (let i = 0; i < grassData.length; i++) {
-        const b = grassData[i];
-        const sway =
-          Math.sin(t * 1.9 + b.phase + scroll * 3.5) * 0.16 +
-          Math.cos(t * 0.8 + b.x) * 0.06;
-        dummy.position.set(b.x, b.y, b.z);
-        dummy.rotation.set(sway * 0.4, b.rotY, sway);
-        dummy.scale.set(b.scaleX, b.scaleY, b.scaleX);
-        dummy.updateMatrix();
-        grassMeshRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      grassMeshRef.current.instanceMatrix.needsUpdate = true;
-    }
-
     if (flowerMeshRef.current) {
       for (let i = 0; i < flowerData.length; i++) {
         const f = flowerData[i];
         const sway = Math.sin(t * 2.1 + f.phase + scroll * 3.5) * 0.14;
         dummy.position.set(f.x + sway * 0.18, f.y, f.z);
         dummy.rotation.set(sway * 0.5, f.rotY, sway);
-        dummy.scale.setScalar(f.scaleX);
+        dummy.scale.setScalar(f.scale);
         dummy.updateMatrix();
         flowerMeshRef.current.setMatrixAt(i, dummy.matrix);
       }
@@ -243,20 +160,6 @@ export function ForegroundElements({
           <meshStandardMaterial color="#645e5b" roughness={0.9} />
         </mesh>
       </group>
-
-      {/* Swaying Alpine Grasses (Instanced 5-blade clumps) */}
-      <instancedMesh
-        ref={grassMeshRef}
-        args={[grassClumpGeo, undefined, grassData.length]}
-      >
-        <meshStandardMaterial
-          color="#506344"
-          emissive="#252f1b"
-          emissiveIntensity={0.2}
-          roughness={0.85}
-          side={THREE.DoubleSide}
-        />
-      </instancedMesh>
 
       {/* Delicate Alpine Wildflower Tips (Instanced) */}
       <instancedMesh

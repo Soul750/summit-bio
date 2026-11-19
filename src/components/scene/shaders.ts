@@ -140,31 +140,31 @@ export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
     float ndotl = max(dot(N, L), 0.0);
     float wrapLight = max((dot(N, L) + 0.35) / 1.35, 0.0);
 
-    // Alpine turf grows on slopes and plateaus below the high snow line
-    float slopeGrass = smoothstep(0.32, 0.72, N.y);
-    float grassPatch = 0.75 + 0.25 * valueNoise(vWorldPos.xz * 0.55);
-    float belowSnow = 1.0 - smoothstep(uSnowLine - 1.4, uSnowLine + 1.2, vElevation);
-    float grassFactor = clamp(slopeGrass * grassPatch * belowSnow * uGrassCoverage, 0.0, 0.92);
+    // Rich green alpine slopes across mountains below the high snow line
+    float slopeGrass = smoothstep(0.08, 0.55, N.y);
+    float grassPatch = 0.8 + 0.2 * valueNoise(vWorldPos.xz * 0.45);
+    float belowSnow = 1.0 - smoothstep(uSnowLine - 1.2, uSnowLine + 2.2, vElevation);
+    float grassFactor = clamp(mix(0.42, 1.0, slopeGrass) * grassPatch * belowSnow * uGrassCoverage, 0.0, 0.96);
 
-    // Snow settles on higher, less vertical ledges
-    float flatness = smoothstep(0.45, 0.85, N.y);
-    float snowFactor = smoothstep(uSnowLine - 1.2, uSnowLine + 2.4, vElevation) * flatness;
+    // Snow settles only on the highest peaks & flattest upper crests
+    float flatness = smoothstep(0.5, 0.88, N.y);
+    float snowFactor = smoothstep(uSnowLine, uSnowLine + 3.2, vElevation) * flatness;
 
     vec3 turfAndRock = mix(uRockColor, uGrassColor, grassFactor);
-    vec3 baseAlbedo = mix(turfAndRock, uSnowColor, snowFactor * 0.72);
+    vec3 baseAlbedo = mix(turfAndRock, uSnowColor, snowFactor * 0.62);
 
     // Alpenglow sunlight color transitions warmer -> deeper rose-amber on scroll
     float dusk = smoothstep(0.05, 0.95, uScroll);
     vec3 sunColor = mix(vec3(1.0, 0.70, 0.42), vec3(0.72, 0.44, 0.38), dusk);
-    vec3 ambientSky = mix(vec3(0.16, 0.21, 0.31), vec3(0.08, 0.11, 0.19), dusk);
+    vec3 ambientSky = mix(vec3(0.24, 0.30, 0.32), vec3(0.12, 0.16, 0.22), dusk);
 
     // Subtle rim alpenglow along grazing mountain silhouettes
     float fresnel = pow(1.0 - max(dot(N, V), 0.0), 3.0);
     float rimSun = max(dot(normalize(-V), L), 0.0);
-    vec3 rimGlow = sunColor * fresnel * (0.15 + 0.35 * rimSun) * mix(0.85, 0.45, dusk);
+    vec3 rimGlow = sunColor * fresnel * (0.14 + 0.32 * rimSun) * mix(0.85, 0.45, dusk);
 
-    vec3 lit = baseAlbedo * (ambientSky + sunColor * wrapLight * 0.95 + sunColor * ndotl * 0.35);
-    lit = mix(uShadowColor, lit, 0.35 + 0.65 * wrapLight);
+    vec3 lit = baseAlbedo * (ambientSky + sunColor * wrapLight * 0.92 + sunColor * ndotl * 0.32);
+    lit = mix(uShadowColor, lit, 0.48 + 0.52 * wrapLight);
     lit += rimGlow;
 
     // Exponential distance atmospheric perspective
