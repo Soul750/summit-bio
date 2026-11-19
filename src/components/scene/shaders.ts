@@ -242,38 +242,49 @@ export const WEEPING_FOLIAGE_FRAGMENT_SHADER = /* glsl */ `
   varying float vTipFactor;
 
   void main() {
-    // Sculpt delicate vertical weeping willow-like strands procedurally in UV space
-    float xCentered = abs(vUv.x - 0.5) * 2.0;
+    // Divide each ribbon into 3 delicate cascading willow sprays
+    float strandIdx = floor(vUv.x * 3.0);
+    float localU = fract(vUv.x * 3.0);
+    float xCentered = abs(localU - 0.5) * 2.0;
+
+    // Slight vertical offset between the 3 sprays so leaflets stagger naturally
+    float yShift = vUv.y + strandIdx * 0.23;
 
     // Taper smoothly toward the hanging tip and top stem
-    float taper = sin(vUv.y * 3.14159);
-    float widthProfile = mix(0.28, 0.96, pow(taper, 0.55));
+    float taper = sin(clamp(vUv.y, 0.0, 1.0) * 3.14159);
+    float widthProfile = mix(0.26, 0.94, pow(taper, 0.48));
 
-    // Fine serrated leaf tufts along the hanging frond
-    float leafNotch = 0.78 + 0.22 * sin(vUv.y * 38.0 + sin(vUv.x * 12.0));
-    float strandMask = smoothstep(widthProfile * leafNotch, widthProfile * leafNotch - 0.24, xCentered);
+    // Alternating pointed willow leaflets along each thin stem
+    float sideSign = sign(localU - 0.5);
+    float leafWave = sin(yShift * 64.0 + sideSign * 1.45);
+    float leafSilhouette = 0.52 + 0.48 * pow(max(leafWave * 0.5 + 0.5, 0.0), 0.7);
+    float leafMask = smoothstep(widthProfile * leafSilhouette, widthProfile * leafSilhouette - 0.26, xCentered);
 
-    // Delicate inner gaps between drooping leaflets
-    float centerStem = smoothstep(0.18, 0.02, xCentered);
-    float leafletRibs = 0.65 + 0.35 * sin(vUv.y * 54.0 + xCentered * 5.0);
-    float alpha = clamp(max(strandMask * leafletRibs, centerStem * 0.85), 0.0, 1.0);
+    // Fine central vine stem connecting the leaflets
+    float centerStem = smoothstep(0.14, 0.02, xCentered);
+    float alpha = clamp(max(leafMask, centerStem * 0.88), 0.0, 1.0);
 
     // Soft fade at very top & bottom tips
-    alpha *= smoothstep(0.0, 0.12, vUv.y) * smoothstep(1.0, 0.90, vUv.y);
+    alpha *= smoothstep(0.0, 0.1, vUv.y) * smoothstep(1.0, 0.91, vUv.y);
 
-    if (alpha < 0.14) discard;
+    if (alpha < 0.15) discard;
 
     float dusk = smoothstep(0.05, 0.95, uScroll);
-    vec3 baseCol = mix(uFoliageDark, uFoliageLight, vTipFactor * 0.65 + (1.0 - xCentered) * 0.25);
+    float leafShade = 0.5 + 0.5 * sin(yShift * 32.0 + strandIdx * 2.1);
+    vec3 baseCol = mix(
+      uFoliageDark,
+      uFoliageLight,
+      vTipFactor * 0.55 + leafShade * 0.3 + (1.0 - xCentered) * 0.18
+    );
 
-    // Golden-hour rim translucency catching the hanging tips
-    float rim = (0.35 + 0.65 * vTipFactor) * (0.4 + 0.6 * vBacklight) * mix(1.0, 0.38, dusk);
-    vec3 color = mix(baseCol, uSunGlowColor, clamp(rim * 0.52, 0.0, 0.68));
+    // Golden-hour rim translucency catching the hanging leaves
+    float rim = (0.32 + 0.68 * vTipFactor) * (0.4 + 0.6 * vBacklight) * mix(1.0, 0.38, dusk);
+    vec3 color = mix(baseCol, uSunGlowColor, clamp(rim * 0.5, 0.0, 0.66));
 
     // Slight darkening in deep twilight
     color *= mix(1.0, 0.66, dusk);
 
-    gl_FragColor = vec4(color, alpha * 0.92);
+    gl_FragColor = vec4(color, alpha * 0.94);
   }
 `;
 
