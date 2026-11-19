@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Summit Bio
 
-## Getting Started
+A modern, responsive biographical website set atop a golden-hour alpine peak with a procedural 3D weeping tree, layered foreground overlook elements, custom GLSL atmospheric shaders, and scroll-driven camera & lighting choreography.
 
-First, run the development server:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/import?s=https://github.com/Soul750/summit-bio)
+
+## Features
+
+- **Custom 3D Alpine Scene (`Three.js` / `@react-three/fiber` / GLSL):**
+  - Procedural golden-hour → twilight sky dome with Mie sun scattering and emerging stars
+  - Sculpted multi-layer mountain ridges with alpenglow rim lighting and atmospheric perspective
+  - Procedural gnarled weeping tree at the summit with custom GLSL wind- & scroll-reactive drooping foliage
+  - Foreground alpine boulders, weathered trail marker post, stone cairn, swaying grasses, wildflowers, and drifting light motes / windblown leaves
+- **Scroll Choreography (`Framer Motion`):**
+  - Smooth camera framing, sun elevation, sky twilight transition, and foliage breeze synced to scroll progress
+- **Performance & Accessibility:**
+  - Adaptive DPR and geometry scaling for mobile / low-power devices
+  - Automatic `prefers-reduced-motion` detection + manual **Calm / 3D** toggle
+  - React Error Boundary and WebGL context-loss fallback to a layered static alpine SVG scene
+
+## Personalizing Your Biography
+
+All personal copy, milestones, selected work, and links live in a single strongly typed configuration file:
+
+- **`src/data/profile.ts`** — Update your name, tagline, current role, location, biographical summary paragraphs, pull quote, career highlights, featured projects, and social links.
+- **`src/app/layout.tsx`** — Metadata automatically reads from `src/data/profile.ts`.
+- **`src/app/globals.css`** — Color tokens and editorial glass panel styles.
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verification
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npx tsc --noEmit
+npm run lint
+npm run build
+```
 
-## Learn More
+## Deploying to Vercel
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Click the **Deploy with Vercel** button above or import `https://github.com/Soul750/summit-bio` in the [Vercel Dashboard](https://vercel.com/new). Vercel automatically detects Next.js (`vercel.json` is preconfigured) and deploys every push to `main`.
