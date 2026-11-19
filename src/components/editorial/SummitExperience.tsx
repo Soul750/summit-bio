@@ -21,9 +21,7 @@ const MountainSceneCanvas = dynamic(
 
 export function SummitExperience() {
   const prefersReducedMotion = Boolean(useReducedMotion());
-  const [userStaticOverride, setUserStaticOverride] = useState<boolean | null>(
-    null
-  );
+  const [isStaticMode, setIsStaticMode] = useState(false);
   const scrollProgressRef = useRef<number>(0);
 
   const { scrollYProgress } = useScroll();
@@ -34,9 +32,6 @@ export function SummitExperience() {
     });
     return () => unsubscribe();
   }, [scrollYProgress]);
-
-  const isStaticMode =
-    userStaticOverride !== null ? userStaticOverride : prefersReducedMotion;
 
   return (
     <div className="relative min-h-screen">
@@ -52,7 +47,7 @@ export function SummitExperience() {
       <Navigation
         scrollYProgress={scrollYProgress}
         isStaticMode={isStaticMode}
-        onToggleStaticMode={() => setUserStaticOverride(!isStaticMode)}
+        onToggleStaticMode={() => setIsStaticMode((prev) => !prev)}
       />
 
       {/* Scroll-Choreographed Editorial Content */}

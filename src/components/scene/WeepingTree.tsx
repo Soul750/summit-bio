@@ -215,17 +215,19 @@ export function WeepingTree({
         createTaperedBranchGeometry([origin, mid1, mid2, tip], 0.1, 0.022, 16, 6)
       );
 
-      // Sample weeping foliage anchor points along the outer 78% of each bough
+      // Sample weeping foliage anchors from the very top arch (t = 0.02) to the tip,
+      // raised slightly above the bough centerline so leaves drape OVER the upper branches
       const curve = new THREE.CatmullRomCurve3([origin, mid1, mid2, tip]);
-      const samples = lowPower ? 10 : 18;
+      const samples = lowPower ? 13 : 22;
       for (let s = 0; s < samples; s++) {
-        const t = 0.22 + (s / (samples - 1)) * 0.78;
+        const t = 0.02 + (s / (samples - 1)) * 0.98;
         const p = curve.getPointAt(t);
+        const topLift = 0.22 + (1 - t) * 0.16;
         anchorPoints.push(
           new THREE.Vector3(
-            p.x + (rand() - 0.5) * 0.4,
-            p.y + (rand() - 0.5) * 0.16,
-            p.z + (rand() - 0.5) * 0.4
+            p.x + (rand() - 0.5) * 0.42,
+            p.y + topLift + (rand() - 0.5) * 0.14,
+            p.z + (rand() - 0.5) * 0.42
           )
         );
       }
@@ -249,22 +251,31 @@ export function WeepingTree({
       );
 
       const subCurve = new THREE.CatmullRomCurve3([mid1, subMid, subTip]);
-      const subSamples = lowPower ? 5 : 9;
+      const subSamples = lowPower ? 6 : 11;
       for (let s = 0; s < subSamples; s++) {
-        const t = 0.25 + (s / (subSamples - 1)) * 0.75;
-        anchorPoints.push(subCurve.getPointAt(t));
+        const t = 0.08 + (s / (subSamples - 1)) * 0.92;
+        const sp = subCurve.getPointAt(t);
+        anchorPoints.push(
+          new THREE.Vector3(
+            sp.x + (rand() - 0.5) * 0.22,
+            sp.y + 0.18 + (rand() - 0.5) * 0.1,
+            sp.z + (rand() - 0.5) * 0.22
+          )
+        );
       }
     }
 
-    // Add crown-top foliage clusters so the silhouette is lush and cohesive
-    const crownCount = lowPower ? 14 : 28;
+    // Lush overarching willow crown dome covering all top branches and trunk fork
+    const crownCount = lowPower ? 45 : 95;
     for (let c = 0; c < crownCount; c++) {
       const a = rand() * Math.PI * 2;
-      const r = 0.22 + rand() * 1.35;
+      const r = 0.08 + Math.pow(rand(), 0.7) * 2.15;
+      // Dome profile: highest at center (y ~ 4.45), arching smoothly down toward outer boughs
+      const domeHeight = 4.48 - Math.pow(r / 2.2, 1.55) * 1.05 + (rand() - 0.5) * 0.28;
       anchorPoints.push(
         new THREE.Vector3(
           0.28 + Math.cos(a) * r,
-          3.48 + rand() * 0.75,
+          domeHeight,
           -0.12 + Math.sin(a) * r
         )
       );
@@ -286,8 +297,8 @@ export function WeepingTree({
     for (const anchor of anchorPoints) {
       // Crossed double-ribbon per anchor so strands have rich volume from every camera angle
       const ribbonCount = 2;
-      const length = 1.3 + rand() * 1.65;
-      const width = 0.28 + rand() * 0.24;
+      const length = 1.45 + rand() * 1.75;
+      const width = 0.34 + rand() * 0.28;
       const phase = rand() * Math.PI * 2;
       const swayAmp = 0.18 + rand() * 0.22;
       const baseAngle = rand() * Math.PI;

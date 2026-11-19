@@ -104,16 +104,33 @@ export const MOUNTAIN_VERTEX_SHADER = /* glsl */ `
 export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
   uniform vec3 uSunDirection;
   uniform vec3 uRockColor;
+  uniform vec3 uGrassColor;
   uniform vec3 uShadowColor;
   uniform vec3 uSnowColor;
   uniform vec3 uFogColor;
   uniform float uFogDensity;
   uniform float uSnowLine;
+  uniform float uGrassCoverage;
   uniform float uScroll;
 
   varying vec3 vWorldPos;
   varying vec3 vNormal;
   varying float vElevation;
+
+  float hash21(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+  }
+
+  float valueNoise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    f = f * f * (3.0 - 2.0 * f);
+    float a = hash21(i);
+    float b = hash21(i + vec2(1.0, 0.0));
+    float c = hash21(i + vec2(0.0, 1.0));
+    float d = hash21(i + vec2(1.0, 1.0));
+    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+  }
 
   void main() {
     vec3 N = normalize(vNormal);
@@ -123,11 +140,18 @@ export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
     float ndotl = max(dot(N, L), 0.0);
     float wrapLight = max((dot(N, L) + 0.35) / 1.35, 0.0);
 
+    // Alpine turf grows on slopes and plateaus below the high snow line
+    float slopeGrass = smoothstep(0.32, 0.72, N.y);
+    float grassPatch = 0.75 + 0.25 * valueNoise(vWorldPos.xz * 0.55);
+    float belowSnow = 1.0 - smoothstep(uSnowLine - 1.4, uSnowLine + 1.2, vElevation);
+    float grassFactor = clamp(slopeGrass * grassPatch * belowSnow * uGrassCoverage, 0.0, 0.92);
+
     // Snow settles on higher, less vertical ledges
     float flatness = smoothstep(0.45, 0.85, N.y);
     float snowFactor = smoothstep(uSnowLine - 1.2, uSnowLine + 2.4, vElevation) * flatness;
 
-    vec3 baseAlbedo = mix(uRockColor, uSnowColor, snowFactor * 0.72);
+    vec3 turfAndRock = mix(uRockColor, uGrassColor, grassFactor);
+    vec3 baseAlbedo = mix(turfAndRock, uSnowColor, snowFactor * 0.72);
 
     // Alpenglow sunlight color transitions warmer -> deeper rose-amber on scroll
     float dusk = smoothstep(0.05, 0.95, uScroll);

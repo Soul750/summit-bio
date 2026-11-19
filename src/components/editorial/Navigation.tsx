@@ -73,20 +73,20 @@ export function Navigation({
               onClick={onToggleStaticMode}
               title={
                 isStaticMode
-                  ? "Switch to interactive 3D mountain scene"
-                  : "Switch to low-power static backdrop"
+                  ? "Static backdrop active — click to switch to 3D"
+                  : "3D mountain scene active — click to switch to static"
               }
-              className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#c5baa8] hover:text-[#f3ede2] hover:bg-[#f3ede2]/8 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-[#e8dfd1] hover:text-[#f3ede2] hover:bg-[#f3ede2]/8 transition-colors cursor-pointer"
             >
               {isStaticMode ? (
                 <>
-                  <Sparkles className="h-3 w-3 text-[#e49b56]" />
-                  <span className="hidden md:inline">3D On</span>
+                  <Mountain className="h-3 w-3 text-[#9c9487]" />
+                  <span className="hidden md:inline">Static</span>
                 </>
               ) : (
                 <>
-                  <Mountain className="h-3 w-3 text-[#e49b56]" />
-                  <span className="hidden md:inline">Calm</span>
+                  <Sparkles className="h-3 w-3 text-[#e49b56]" />
+                  <span className="hidden md:inline">3D</span>
                 </>
               )}
             </button>

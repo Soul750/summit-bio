@@ -1,22 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight, Mail, Globe, Compass } from "lucide-react";
-import { profile, type SocialLink } from "@/data/profile";
+import { ArrowUpRight } from "lucide-react";
+import { profile } from "@/data/profile";
 
 interface WorkAndLinksSectionProps {
   reducedMotion: boolean;
-}
-
-function getLinkBadge(kind: SocialLink["kind"]) {
-  switch (kind) {
-    case "email":
-      return <Mail className="h-4 w-4 text-[#e49b56]" />;
-    case "website":
-      return <Globe className="h-4 w-4 text-[#e49b56]" />;
-    default:
-      return <Compass className="h-4 w-4 text-[#e49b56]" />;
-  }
 }
 
 export function WorkAndLinksSection({
@@ -100,7 +89,7 @@ export function WorkAndLinksSection({
         </div>
       </section>
 
-      {/* Connect & Links */}
+      {/* Elsewhere — Coming Soon */}
       <section
         id="connect"
         aria-labelledby="connect-heading"
@@ -111,8 +100,8 @@ export function WorkAndLinksSection({
             {...revealProps}
             className="alpine-panel-subtle rounded-2xl sm:rounded-3xl p-7 sm:p-12"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-              <div className="lg:col-span-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="max-w-xl">
                 <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-[#e49b56] mb-3">
                   03 · Elsewhere
                 </p>
@@ -120,42 +109,20 @@ export function WorkAndLinksSection({
                   id="connect-heading"
                   className="font-display text-3xl sm:text-4xl font-light text-[#f5efe4] leading-tight"
                 >
-                  Always glad to hear from thoughtful people.
+                  Coming Soon
                 </h2>
-                <p className="mt-4 text-sm sm:text-[15px] font-light leading-relaxed text-[#c6bcac]">
-                  Whether you want to trade thoughts on biological anthropology,
-                  swap passages in another language, or linger over a good
-                  philosophical question, feel free to reach out.
+                <p className="mt-3 text-sm sm:text-[15px] font-light leading-relaxed text-[#c6bcac]">
+                  Contact links, essays, and ways to connect are being gathered
+                  and will open here soon.
                 </p>
               </div>
 
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                {profile.links.map((link) => {
-                  const isExternal = !link.href.startsWith("mailto:");
-                  return (
-                    <a
-                      key={link.label}
-                      id={`social-link-${link.kind}`}
-                      href={link.href}
-                      target={isExternal ? "_blank" : undefined}
-                      rel={isExternal ? "noopener noreferrer" : undefined}
-                      className="group flex items-center justify-between rounded-xl border border-[#f3ede2]/12 bg-[#0d121d]/55 px-5 py-4 hover:border-[#e49b56]/45 hover:bg-[#141c2c]/70 transition-all"
-                    >
-                      <div className="flex items-center gap-3.5 min-w-0">
-                        {getLinkBadge(link.kind)}
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-[#f3ede2] group-hover:text-[#e49b56] transition-colors">
-                            {link.label}
-                          </p>
-                          <p className="font-mono text-[11px] text-[#9c9487] truncate">
-                            {link.handle}
-                          </p>
-                        </div>
-                      </div>
-                      <ArrowUpRight className="h-4 w-4 text-[#9c9487] group-hover:text-[#e49b56] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all shrink-0" />
-                    </a>
-                  );
-                })}
+              <div className="inline-flex items-center gap-2.5 self-start md:self-center rounded-full border border-[#f3ede2]/15 bg-[#0d121d]/60 px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.22em] text-[#e49b56]">
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 rounded-full bg-[#e49b56]"
+                />
+                <span>Coming Soon</span>
               </div>
             </div>
           </motion.div>
