@@ -111,6 +111,7 @@ export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
   uniform float uFogDensity;
   uniform float uSnowLine;
   uniform float uGrassCoverage;
+  uniform float uSolidGreen;
   uniform float uScroll;
 
   varying vec3 vWorldPos;
@@ -133,6 +134,14 @@ export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
   }
 
   void main() {
+    float dusk = smoothstep(0.05, 0.95, uScroll);
+
+    if (uSolidGreen > 0.5) {
+      vec3 solidGreen = mix(uGrassColor, uGrassColor * 0.52, dusk);
+      gl_FragColor = vec4(solidGreen, 1.0);
+      return;
+    }
+
     vec3 N = normalize(vNormal);
     vec3 L = normalize(uSunDirection);
     vec3 V = normalize(cameraPosition - vWorldPos);
@@ -154,7 +163,6 @@ export const MOUNTAIN_FRAGMENT_SHADER = /* glsl */ `
     vec3 baseAlbedo = mix(turfAndRock, uSnowColor, snowFactor * 0.62);
 
     // Alpenglow sunlight color transitions warmer -> deeper rose-amber on scroll
-    float dusk = smoothstep(0.05, 0.95, uScroll);
     vec3 sunColor = mix(vec3(1.0, 0.70, 0.42), vec3(0.72, 0.44, 0.38), dusk);
     vec3 ambientSky = mix(vec3(0.24, 0.30, 0.32), vec3(0.12, 0.16, 0.22), dusk);
 

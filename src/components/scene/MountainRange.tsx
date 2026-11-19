@@ -308,6 +308,7 @@ export function MountainRange({
       uFogDensity: { value: 0.012 },
       uSnowLine: { value: 3.4 },
       uGrassCoverage: { value: 1.0 },
+      uSolidGreen: { value: 0.0 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -316,14 +317,15 @@ export function MountainRange({
   const midUniforms = useMemo(
     () => ({
       uSunDirection: { value: sharedSunDir.clone() },
-      uRockColor: { value: new THREE.Color("#2a422d") },
-      uGrassColor: { value: new THREE.Color("#44683b") },
-      uShadowColor: { value: new THREE.Color("#13241b") },
-      uSnowColor: { value: new THREE.Color("#d9c6b0") },
+      uRockColor: { value: new THREE.Color("#14421d") },
+      uGrassColor: { value: new THREE.Color("#14421d") },
+      uShadowColor: { value: new THREE.Color("#14421d") },
+      uSnowColor: { value: new THREE.Color("#14421d") },
       uFogColor: { value: GOLDEN_FOG.clone() },
-      uFogDensity: { value: 0.0145 },
-      uSnowLine: { value: 8.6 },
+      uFogDensity: { value: 0.0 },
+      uSnowLine: { value: 99.0 },
       uGrassCoverage: { value: 1.0 },
+      uSolidGreen: { value: 1.0 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -332,14 +334,15 @@ export function MountainRange({
   const distantUniforms = useMemo(
     () => ({
       uSunDirection: { value: sharedSunDir.clone() },
-      uRockColor: { value: new THREE.Color("#283f31") },
-      uGrassColor: { value: new THREE.Color("#3c5e3a") },
-      uShadowColor: { value: new THREE.Color("#14241e") },
-      uSnowColor: { value: new THREE.Color("#e8ccb2") },
+      uRockColor: { value: new THREE.Color("#0d3316") },
+      uGrassColor: { value: new THREE.Color("#0d3316") },
+      uShadowColor: { value: new THREE.Color("#0d3316") },
+      uSnowColor: { value: new THREE.Color("#0d3316") },
       uFogColor: { value: GOLDEN_FOG.clone() },
-      uFogDensity: { value: 0.0135 },
-      uSnowLine: { value: 14.5 },
-      uGrassCoverage: { value: 0.95 },
+      uFogDensity: { value: 0.0 },
+      uSnowLine: { value: 99.0 },
+      uGrassCoverage: { value: 1.0 },
+      uSolidGreen: { value: 1.0 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -350,7 +353,7 @@ export function MountainRange({
       uTime: { value: 0 },
       uScroll: { value: 0 },
       uMistColor: { value: GOLDEN_MIST.clone() },
-      uOpacity: { value: 0.28 },
+      uOpacity: { value: 0.08 },
     }),
     []
   );
@@ -360,7 +363,7 @@ export function MountainRange({
       uTime: { value: 12 },
       uScroll: { value: 0 },
       uMistColor: { value: GOLDEN_MIST.clone() },
-      uOpacity: { value: 0.22 },
+      uOpacity: { value: 0.06 },
     }),
     []
   );
@@ -392,8 +395,8 @@ export function MountainRange({
         scroll
       );
       mistMat1Ref.current.uniforms.uOpacity.value = THREE.MathUtils.lerp(
-        0.3,
-        0.2,
+        0.09,
+        0.05,
         scroll
       );
     }
