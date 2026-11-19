@@ -116,15 +116,15 @@ function buildMountainGeometry(
  */
 function createGrassTuftGeometry(): THREE.BufferGeometry {
   const blades = [
-    { offsetX: 0, offsetZ: 0, rotY: 0.1, tilt: 0.12, height: 0.68, width: 0.07 },
-    { offsetX: -0.05, offsetZ: 0.03, rotY: 0.85, tilt: 0.25, height: 0.58, width: 0.062 },
-    { offsetX: 0.05, offsetZ: -0.03, rotY: 1.65, tilt: 0.22, height: 0.62, width: 0.064 },
-    { offsetX: -0.04, offsetZ: -0.05, rotY: 2.45, tilt: 0.28, height: 0.54, width: 0.058 },
-    { offsetX: 0.04, offsetZ: 0.05, rotY: 3.25, tilt: 0.24, height: 0.56, width: 0.06 },
-    { offsetX: -0.07, offsetZ: 0.01, rotY: 4.05, tilt: 0.32, height: 0.48, width: 0.055 },
-    { offsetX: 0.07, offsetZ: -0.01, rotY: 4.85, tilt: 0.3, height: 0.5, width: 0.056 },
-    { offsetX: 0.01, offsetZ: -0.07, rotY: 5.55, tilt: 0.27, height: 0.52, width: 0.058 },
-    { offsetX: -0.01, offsetZ: 0.07, rotY: 2.05, tilt: 0.26, height: 0.55, width: 0.058 },
+    { offsetX: 0, offsetZ: 0, rotY: 0.1, tilt: 0.16, height: 0.24, width: 0.044 },
+    { offsetX: -0.04, offsetZ: 0.02, rotY: 0.85, tilt: 0.28, height: 0.2, width: 0.04 },
+    { offsetX: 0.04, offsetZ: -0.02, rotY: 1.65, tilt: 0.26, height: 0.22, width: 0.042 },
+    { offsetX: -0.03, offsetZ: -0.04, rotY: 2.45, tilt: 0.3, height: 0.18, width: 0.038 },
+    { offsetX: 0.03, offsetZ: 0.04, rotY: 3.25, tilt: 0.26, height: 0.19, width: 0.04 },
+    { offsetX: -0.05, offsetZ: 0.01, rotY: 4.05, tilt: 0.34, height: 0.16, width: 0.036 },
+    { offsetX: 0.05, offsetZ: -0.01, rotY: 4.85, tilt: 0.32, height: 0.17, width: 0.038 },
+    { offsetX: 0.01, offsetZ: -0.05, rotY: 5.55, tilt: 0.28, height: 0.18, width: 0.038 },
+    { offsetX: -0.01, offsetZ: 0.05, rotY: 2.05, tilt: 0.28, height: 0.19, width: 0.038 },
   ];
 
   const positions: number[] = [];
@@ -239,59 +239,59 @@ export function MountainRange({
     };
   }, [lowPower]);
 
-  // Blanket the area beneath the weeping tree, the summit slopes, and the surrounding mountains in lush grass
+  // Short alpine turf beneath the weeping tree, across the summit, and hugging the lower mountain slopes
   const { summitGrass, ridgeGrass, fallenLeaves } = useMemo(() => {
     const rand = createSeededRandom(9241);
 
     const sGrass: SlopeTuft[] = [];
 
-    // 1a. Thick meadow carpet directly beneath the weeping tree and around its roots
-    const underTreeCount = lowPower ? 240 : 620;
+    // 1a. Short grassy carpet directly beneath the weeping tree and around its roots
+    const underTreeCount = lowPower ? 220 : 520;
     for (let i = 0; i < underTreeCount; i++) {
       const angle = rand() * Math.PI * 2;
-      const dist = 0.02 + Math.pow(rand(), 0.78) * 2.35;
+      const dist = 0.02 + Math.pow(rand(), 0.78) * 2.25;
       const lx = Math.cos(angle) * dist;
       const lz = Math.sin(angle) * dist * 0.92;
       const ly = evaluateMountainHeight(lx, lz, 15, 12, 4.2, 1.1, "summit");
 
       sGrass.push({
         x: lx + 0.4,
-        y: ly - 0.35 - 0.03,
+        y: ly - 0.35 - 0.02,
         z: lz - 1.6,
-        scaleX: 1.05 + rand() * 0.85,
-        scaleY: 0.78 + rand() * 1.05,
+        scaleX: 0.95 + rand() * 0.65,
+        scaleY: 0.55 + rand() * 0.5,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
-        tiltX: (rand() - 0.5) * 0.18,
-        tiltZ: (rand() - 0.5) * 0.18,
+        tiltX: (rand() - 0.5) * 0.16,
+        tiltZ: (rand() - 0.5) * 0.16,
       });
     }
 
-    // 1b. Dense grassy blanket across the entire summit mountain crown & slopes
-    const sGrassCount = lowPower ? 480 : 1250;
+    // 1b. Neat grassy coverage across the summit mountain crown & slopes
+    const sGrassCount = lowPower ? 380 : 950;
     for (let i = 0; i < sGrassCount; i++) {
       const angle = rand() * Math.PI * 2;
-      const dist = 0.5 + Math.pow(rand(), 0.62) * 6.0;
+      const dist = 0.5 + Math.pow(rand(), 0.62) * 5.8;
       const lx = Math.cos(angle) * dist;
       const lz = Math.sin(angle) * dist * 0.82;
       const ly = evaluateMountainHeight(lx, lz, 15, 12, 4.2, 1.1, "summit");
 
-      if (ly > -3.1) {
+      if (ly > -2.9) {
         sGrass.push({
           x: lx + 0.4,
-          y: ly - 0.35 - 0.03,
+          y: ly - 0.35 - 0.02,
           z: lz - 1.6,
-          scaleX: 1.15 + rand() * 1.05,
-          scaleY: 0.85 + rand() * 1.25,
+          scaleX: 1.0 + rand() * 0.7,
+          scaleY: 0.5 + rand() * 0.55,
           rotY: rand() * Math.PI * 2,
           phase: rand() * Math.PI * 2,
-          tiltX: (rand() - 0.5) * 0.24,
-          tiltZ: (rand() - 0.5) * 0.24,
+          tiltX: (rand() - 0.5) * 0.2,
+          tiltZ: (rand() - 0.5) * 0.2,
         });
       }
     }
 
-    // 2. Abundant alpine grass tufts across the flanking mountains & distant mountain slopes
+    // 2. Short alpine grass tufts hugging the lower mountain slopes so peaks & ridges stay crisp
     const rGrass: SlopeTuft[] = [];
 
     const addRidgeTufts = (
@@ -310,8 +310,8 @@ export function MountainRange({
       const cosR = Math.cos(rotY);
       const sinR = Math.sin(rotY);
       for (let i = 0; i < count; i++) {
-        const lx = (rand() - 0.5) * width * 0.88;
-        const lz = (rand() - 0.5) * depth * 0.78;
+        const lx = (rand() - 0.5) * width * 0.86;
+        const lz = (rand() - 0.5) * depth * 0.74;
         const ly = evaluateMountainHeight(
           lx,
           lz,
@@ -325,23 +325,23 @@ export function MountainRange({
         if (ly > minY && ly < maxY) {
           const wx = pos[0] + lx * cosR + lz * sinR;
           const wz = pos[2] - lx * sinR + lz * cosR;
-          const wy = pos[1] + ly - 0.06;
+          const wy = pos[1] + ly - 0.03;
           rGrass.push({
             x: wx,
             y: wy,
             z: wz,
-            scaleX: baseScale * (0.9 + rand() * 1.0),
-            scaleY: baseScale * (0.85 + rand() * 1.2),
+            scaleX: baseScale * (0.75 + rand() * 0.55),
+            scaleY: baseScale * (0.4 + rand() * 0.4),
             rotY: rand() * Math.PI * 2,
             phase: rand() * Math.PI * 2,
-            tiltX: (rand() - 0.5) * 0.28,
-            tiltZ: (rand() - 0.5) * 0.28,
+            tiltX: (rand() - 0.5) * 0.22,
+            tiltZ: (rand() - 0.5) * 0.22,
           });
         }
       }
     };
 
-    const perMidCount = lowPower ? 420 : 1150;
+    const perMidCount = lowPower ? 300 : 750;
     addRidgeTufts(
       perMidCount,
       34,
@@ -351,9 +351,9 @@ export function MountainRange({
       "midLeft",
       [-15.5, -7.2, -17.5],
       0.24,
-      0.15,
-      8.8,
-      2.85
+      0.2,
+      6.8,
+      1.35
     );
     addRidgeTufts(
       perMidCount,
@@ -364,12 +364,12 @@ export function MountainRange({
       "midRight",
       [16.5, -6.8, -19.5],
       -0.28,
-      0.15,
-      8.2,
-      2.85
+      0.2,
+      6.4,
+      1.35
     );
     addRidgeTufts(
-      lowPower ? 460 : 1300,
+      lowPower ? 320 : 800,
       120,
       42,
       24,
@@ -378,8 +378,8 @@ export function MountainRange({
       [0, -10.5, -48],
       0,
       0.4,
-      14.5,
-      5.6
+      10.5,
+      2.0
     );
 
     // 3. Fallen willow leaves resting in the grass beneath the tree and across the summit

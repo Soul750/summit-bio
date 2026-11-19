@@ -42,11 +42,11 @@ function createAlpineRockGeometry(seed: number, radius = 1): THREE.BufferGeometr
 
 function createForegroundGrassClump(): THREE.BufferGeometry {
   const blades = [
-    { ox: 0, oz: 0, ry: 0.2, tilt: 0.14, h: 0.56, w: 0.056 },
-    { ox: -0.04, oz: 0.02, ry: 1.4, tilt: 0.26, h: 0.46, w: 0.048 },
-    { ox: 0.04, oz: -0.02, ry: 2.7, tilt: 0.24, h: 0.48, w: 0.05 },
-    { ox: -0.02, oz: -0.04, ry: 3.9, tilt: 0.28, h: 0.42, w: 0.046 },
-    { ox: 0.03, oz: 0.03, ry: 5.1, tilt: 0.22, h: 0.44, w: 0.046 },
+    { ox: 0, oz: 0, ry: 0.2, tilt: 0.16, h: 0.26, w: 0.044 },
+    { ox: -0.04, oz: 0.02, ry: 1.4, tilt: 0.28, h: 0.21, w: 0.038 },
+    { ox: 0.04, oz: -0.02, ry: 2.7, tilt: 0.26, h: 0.22, w: 0.04 },
+    { ox: -0.02, oz: -0.04, ry: 3.9, tilt: 0.3, h: 0.18, w: 0.036 },
+    { ox: 0.03, oz: 0.03, ry: 5.1, tilt: 0.24, h: 0.2, w: 0.038 },
   ];
   const positions: number[] = [];
   const normals: number[] = [];
@@ -102,7 +102,7 @@ export function ForegroundElements({
 
   const { grassData, flowerData } = useMemo(() => {
     const rand = createSeededRandom(8842);
-    const grassCount = lowPower ? 160 : 360;
+    const grassCount = lowPower ? 150 : 320;
     const flowerCount = lowPower ? 26 : 52;
 
     const grass: GrassBladeData[] = [];
@@ -121,8 +121,8 @@ export function ForegroundElements({
         x,
         y,
         z,
-        scaleX: 0.78 + rand() * 0.75,
-        scaleY: 0.7 + rand() * 1.05,
+        scaleX: 0.78 + rand() * 0.6,
+        scaleY: 0.55 + rand() * 0.55,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
       });
