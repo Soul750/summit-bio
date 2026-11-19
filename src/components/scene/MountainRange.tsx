@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import {
@@ -111,16 +111,20 @@ function buildMountainGeometry(
 }
 
 /**
- * Builds a single 5-blade tapered alpine grass tuft BufferGeometry so each
- * instanced tuft renders lush multi-angled foliage at minimal GPU cost.
+ * Builds a dense 9-blade tapered alpine grass clump BufferGeometry so each
+ * instanced tuft renders rich, natural meadow coverage at minimal GPU cost.
  */
 function createGrassTuftGeometry(): THREE.BufferGeometry {
   const blades = [
-    { offsetX: 0, offsetZ: 0, rotY: 0, tilt: 0.12, height: 0.52, width: 0.055 },
-    { offsetX: -0.04, offsetZ: 0.02, rotY: 1.15, tilt: 0.24, height: 0.44, width: 0.048 },
-    { offsetX: 0.04, offsetZ: -0.02, rotY: 2.35, tilt: 0.22, height: 0.46, width: 0.048 },
-    { offsetX: -0.02, offsetZ: -0.04, rotY: 3.7, tilt: 0.26, height: 0.4, width: 0.045 },
-    { offsetX: 0.03, offsetZ: 0.03, rotY: 4.9, tilt: 0.2, height: 0.42, width: 0.046 },
+    { offsetX: 0, offsetZ: 0, rotY: 0.1, tilt: 0.12, height: 0.68, width: 0.07 },
+    { offsetX: -0.05, offsetZ: 0.03, rotY: 0.85, tilt: 0.25, height: 0.58, width: 0.062 },
+    { offsetX: 0.05, offsetZ: -0.03, rotY: 1.65, tilt: 0.22, height: 0.62, width: 0.064 },
+    { offsetX: -0.04, offsetZ: -0.05, rotY: 2.45, tilt: 0.28, height: 0.54, width: 0.058 },
+    { offsetX: 0.04, offsetZ: 0.05, rotY: 3.25, tilt: 0.24, height: 0.56, width: 0.06 },
+    { offsetX: -0.07, offsetZ: 0.01, rotY: 4.05, tilt: 0.32, height: 0.48, width: 0.055 },
+    { offsetX: 0.07, offsetZ: -0.01, rotY: 4.85, tilt: 0.3, height: 0.5, width: 0.056 },
+    { offsetX: 0.01, offsetZ: -0.07, rotY: 5.55, tilt: 0.27, height: 0.52, width: 0.058 },
+    { offsetX: -0.01, offsetZ: 0.07, rotY: 2.05, tilt: 0.26, height: 0.55, width: 0.058 },
   ];
 
   const positions: number[] = [];
@@ -134,7 +138,6 @@ function createGrassTuftGeometry(): THREE.BufferGeometry {
     const hw = b.width * 0.5;
     const tipLean = Math.sin(b.tilt) * b.height;
 
-    // 4-vertex tapered curved blade: bottom-left, bottom-right, mid, tip
     const pts = [
       [-hw, 0, 0],
       [hw, 0, 0],
@@ -236,27 +239,27 @@ export function MountainRange({
     };
   }, [lowPower]);
 
-  // Cover the summit (including directly beneath the weeping tree) and the mountain slopes in grass tufts
+  // Blanket the area beneath the weeping tree, the summit slopes, and the surrounding mountains in lush grass
   const { summitGrass, ridgeGrass, fallenLeaves } = useMemo(() => {
     const rand = createSeededRandom(9241);
 
     const sGrass: SlopeTuft[] = [];
 
-    // 1a. Dense grassy carpet directly beneath and around the weeping tree roots
-    const underTreeCount = lowPower ? 120 : 250;
+    // 1a. Thick meadow carpet directly beneath the weeping tree and around its roots
+    const underTreeCount = lowPower ? 240 : 620;
     for (let i = 0; i < underTreeCount; i++) {
       const angle = rand() * Math.PI * 2;
-      const dist = 0.05 + Math.pow(rand(), 0.8) * 1.95;
+      const dist = 0.02 + Math.pow(rand(), 0.78) * 2.35;
       const lx = Math.cos(angle) * dist;
-      const lz = Math.sin(angle) * dist * 0.9;
+      const lz = Math.sin(angle) * dist * 0.92;
       const ly = evaluateMountainHeight(lx, lz, 15, 12, 4.2, 1.1, "summit");
 
       sGrass.push({
         x: lx + 0.4,
         y: ly - 0.35 - 0.03,
         z: lz - 1.6,
-        scaleX: 0.95 + rand() * 0.75,
-        scaleY: 0.72 + rand() * 0.95,
+        scaleX: 1.05 + rand() * 0.85,
+        scaleY: 0.78 + rand() * 1.05,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
         tiltX: (rand() - 0.5) * 0.18,
@@ -264,22 +267,22 @@ export function MountainRange({
       });
     }
 
-    // 1b. Broad grassy coverage across the entire summit mountain crown & slopes
-    const sGrassCount = lowPower ? 260 : 560;
+    // 1b. Dense grassy blanket across the entire summit mountain crown & slopes
+    const sGrassCount = lowPower ? 480 : 1250;
     for (let i = 0; i < sGrassCount; i++) {
       const angle = rand() * Math.PI * 2;
-      const dist = 0.8 + Math.pow(rand(), 0.65) * 5.6;
+      const dist = 0.5 + Math.pow(rand(), 0.62) * 6.0;
       const lx = Math.cos(angle) * dist;
       const lz = Math.sin(angle) * dist * 0.82;
       const ly = evaluateMountainHeight(lx, lz, 15, 12, 4.2, 1.1, "summit");
 
-      if (ly > -2.8) {
+      if (ly > -3.1) {
         sGrass.push({
           x: lx + 0.4,
           y: ly - 0.35 - 0.03,
           z: lz - 1.6,
-          scaleX: 1.05 + rand() * 0.95,
-          scaleY: 0.8 + rand() * 1.2,
+          scaleX: 1.15 + rand() * 1.05,
+          scaleY: 0.85 + rand() * 1.25,
           rotY: rand() * Math.PI * 2,
           phase: rand() * Math.PI * 2,
           tiltX: (rand() - 0.5) * 0.24,
@@ -288,7 +291,7 @@ export function MountainRange({
       }
     }
 
-    // 2. Lush alpine grass tufts covering the flanking mountains & distant foothills
+    // 2. Abundant alpine grass tufts across the flanking mountains & distant mountain slopes
     const rGrass: SlopeTuft[] = [];
 
     const addRidgeTufts = (
@@ -307,8 +310,8 @@ export function MountainRange({
       const cosR = Math.cos(rotY);
       const sinR = Math.sin(rotY);
       for (let i = 0; i < count; i++) {
-        const lx = (rand() - 0.5) * width * 0.85;
-        const lz = (rand() - 0.5) * depth * 0.72;
+        const lx = (rand() - 0.5) * width * 0.88;
+        const lz = (rand() - 0.5) * depth * 0.78;
         const ly = evaluateMountainHeight(
           lx,
           lz,
@@ -322,13 +325,13 @@ export function MountainRange({
         if (ly > minY && ly < maxY) {
           const wx = pos[0] + lx * cosR + lz * sinR;
           const wz = pos[2] - lx * sinR + lz * cosR;
-          const wy = pos[1] + ly - 0.05;
+          const wy = pos[1] + ly - 0.06;
           rGrass.push({
             x: wx,
             y: wy,
             z: wz,
-            scaleX: baseScale * (0.85 + rand() * 0.95),
-            scaleY: baseScale * (0.8 + rand() * 1.15),
+            scaleX: baseScale * (0.9 + rand() * 1.0),
+            scaleY: baseScale * (0.85 + rand() * 1.2),
             rotY: rand() * Math.PI * 2,
             phase: rand() * Math.PI * 2,
             tiltX: (rand() - 0.5) * 0.28,
@@ -338,7 +341,7 @@ export function MountainRange({
       }
     };
 
-    const perMidCount = lowPower ? 150 : 340;
+    const perMidCount = lowPower ? 420 : 1150;
     addRidgeTufts(
       perMidCount,
       34,
@@ -348,9 +351,9 @@ export function MountainRange({
       "midLeft",
       [-15.5, -7.2, -17.5],
       0.24,
-      0.4,
-      7.2,
-      2.35
+      0.15,
+      8.8,
+      2.85
     );
     addRidgeTufts(
       perMidCount,
@@ -361,12 +364,12 @@ export function MountainRange({
       "midRight",
       [16.5, -6.8, -19.5],
       -0.28,
-      0.4,
-      6.8,
-      2.35
+      0.15,
+      8.2,
+      2.85
     );
     addRidgeTufts(
-      lowPower ? 120 : 280,
+      lowPower ? 460 : 1300,
       120,
       42,
       24,
@@ -374,9 +377,9 @@ export function MountainRange({
       "distant",
       [0, -10.5, -48],
       0,
-      1.2,
-      11.5,
-      4.4
+      0.4,
+      14.5,
+      5.6
     );
 
     // 3. Fallen willow leaves resting in the grass beneath the tree and across the summit
@@ -416,13 +419,13 @@ export function MountainRange({
     () => ({
       uSunDirection: { value: sharedSunDir.clone() },
       uRockColor: { value: new THREE.Color("#3a383c") },
-      uGrassColor: { value: new THREE.Color("#36452e") },
+      uGrassColor: { value: new THREE.Color("#435834") },
       uShadowColor: { value: new THREE.Color("#141925") },
       uSnowColor: { value: new THREE.Color("#cbbca8") },
       uFogColor: { value: GOLDEN_FOG.clone() },
       uFogDensity: { value: 0.013 },
-      uSnowLine: { value: 2.6 },
-      uGrassCoverage: { value: 0.92 },
+      uSnowLine: { value: 2.8 },
+      uGrassCoverage: { value: 0.98 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -432,13 +435,13 @@ export function MountainRange({
     () => ({
       uSunDirection: { value: sharedSunDir.clone() },
       uRockColor: { value: new THREE.Color("#343948") },
-      uGrassColor: { value: new THREE.Color("#2f402c") },
+      uGrassColor: { value: new THREE.Color("#394e31") },
       uShadowColor: { value: new THREE.Color("#121724") },
       uSnowColor: { value: new THREE.Color("#d9c6b0") },
       uFogColor: { value: GOLDEN_FOG.clone() },
       uFogDensity: { value: 0.017 },
-      uSnowLine: { value: 6.4 },
-      uGrassCoverage: { value: 0.82 },
+      uSnowLine: { value: 7.4 },
+      uGrassCoverage: { value: 0.92 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -448,13 +451,13 @@ export function MountainRange({
     () => ({
       uSunDirection: { value: sharedSunDir.clone() },
       uRockColor: { value: new THREE.Color("#2e3547") },
-      uGrassColor: { value: new THREE.Color("#2b3a2e") },
+      uGrassColor: { value: new THREE.Color("#324734") },
       uShadowColor: { value: new THREE.Color("#131828") },
       uSnowColor: { value: new THREE.Color("#e8ccb2") },
       uFogColor: { value: GOLDEN_FOG.clone() },
       uFogDensity: { value: 0.0155 },
-      uSnowLine: { value: 11.2 },
-      uGrassCoverage: { value: 0.68 },
+      uSnowLine: { value: 12.6 },
+      uGrassCoverage: { value: 0.82 },
       uScroll: { value: 0 },
     }),
     [sharedSunDir]
@@ -479,6 +482,20 @@ export function MountainRange({
     }),
     []
   );
+
+  useLayoutEffect(() => {
+    if (!ridgeGrassRef.current) return;
+    const obj = new THREE.Object3D();
+    for (let i = 0; i < ridgeGrass.length; i++) {
+      const g = ridgeGrass[i];
+      obj.position.set(g.x, g.y, g.z);
+      obj.rotation.set(g.tiltX, g.rotY, g.tiltZ);
+      obj.scale.set(g.scaleX, g.scaleY, g.scaleX);
+      obj.updateMatrix();
+      ridgeGrassRef.current.setMatrixAt(i, obj.matrix);
+    }
+    ridgeGrassRef.current.instanceMatrix.needsUpdate = true;
+  }, [ridgeGrass]);
 
   useFrame((_, delta) => {
     const scroll = scrollProgressRef.current ?? 0;
@@ -533,19 +550,6 @@ export function MountainRange({
         summitGrassRef.current.setMatrixAt(i, dummy.matrix);
       }
       summitGrassRef.current.instanceMatrix.needsUpdate = true;
-    }
-
-    if (ridgeGrassRef.current) {
-      for (let i = 0; i < ridgeGrass.length; i++) {
-        const g = ridgeGrass[i];
-        const sway = Math.sin(t * 1.4 + g.phase + scroll * 2.5) * 0.1;
-        dummy.position.set(g.x, g.y, g.z);
-        dummy.rotation.set(g.tiltX, g.rotY, g.tiltZ + sway);
-        dummy.scale.set(g.scaleX, g.scaleY, g.scaleX);
-        dummy.updateMatrix();
-        ridgeGrassRef.current.setMatrixAt(i, dummy.matrix);
-      }
-      ridgeGrassRef.current.instanceMatrix.needsUpdate = true;
     }
 
     if (fallenLeavesRef.current) {

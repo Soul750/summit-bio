@@ -40,6 +40,46 @@ function createAlpineRockGeometry(seed: number, radius = 1): THREE.BufferGeometr
   return geo;
 }
 
+function createForegroundGrassClump(): THREE.BufferGeometry {
+  const blades = [
+    { ox: 0, oz: 0, ry: 0.2, tilt: 0.14, h: 0.56, w: 0.056 },
+    { ox: -0.04, oz: 0.02, ry: 1.4, tilt: 0.26, h: 0.46, w: 0.048 },
+    { ox: 0.04, oz: -0.02, ry: 2.7, tilt: 0.24, h: 0.48, w: 0.05 },
+    { ox: -0.02, oz: -0.04, ry: 3.9, tilt: 0.28, h: 0.42, w: 0.046 },
+    { ox: 0.03, oz: 0.03, ry: 5.1, tilt: 0.22, h: 0.44, w: 0.046 },
+  ];
+  const positions: number[] = [];
+  const normals: number[] = [];
+  const indices: number[] = [];
+  let offset = 0;
+
+  for (const b of blades) {
+    const cosY = Math.cos(b.ry);
+    const sinY = Math.sin(b.ry);
+    const hw = b.w * 0.5;
+    const lean = Math.sin(b.tilt) * b.h;
+    const pts = [
+      [-hw, 0, 0],
+      [hw, 0, 0],
+      [-hw * 0.45, b.h * 0.52, lean * 0.35],
+      [hw * 0.45, b.h * 0.52, lean * 0.35],
+      [0, b.h, lean],
+    ];
+    for (const [lx, ly, lz] of pts) {
+      positions.push(b.ox + lx * cosY - lz * sinY, ly, b.oz + lx * sinY + lz * cosY);
+      normals.push(sinY * 0.3, 0.9, cosY * 0.3);
+    }
+    indices.push(offset, offset + 1, offset + 2, offset + 1, offset + 3, offset + 2, offset + 2, offset + 3, offset + 4);
+    offset += 5;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+  geo.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+  geo.setIndex(indices);
+  geo.computeVertexNormals();
+  return geo;
+}
+
 export function ForegroundElements({
   scrollProgressRef,
   lowPower = false,
@@ -48,6 +88,7 @@ export function ForegroundElements({
   const flowerMeshRef = useRef<THREE.InstancedMesh>(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const timeRef = useRef(0);
+  const grassClumpGeo = useMemo(() => createForegroundGrassClump(), []);
 
   const rockGeos = useMemo(
     () => ({
@@ -61,7 +102,7 @@ export function ForegroundElements({
 
   const { grassData, flowerData } = useMemo(() => {
     const rand = createSeededRandom(8842);
-    const grassCount = lowPower ? 140 : 280;
+    const grassCount = lowPower ? 160 : 360;
     const flowerCount = lowPower ? 26 : 52;
 
     const grass: GrassBladeData[] = [];
@@ -203,14 +244,15 @@ export function ForegroundElements({
         </mesh>
       </group>
 
-      {/* Swaying Alpine Grasses (Instanced) */}
+      {/* Swaying Alpine Grasses (Instanced 5-blade clumps) */}
       <instancedMesh
         ref={grassMeshRef}
-        args={[undefined, undefined, grassData.length]}
+        args={[grassClumpGeo, undefined, grassData.length]}
       >
-        <coneGeometry args={[0.028, 0.48, 3]} />
         <meshStandardMaterial
-          color="#4c5c43"
+          color="#506344"
+          emissive="#252f1b"
+          emissiveIntensity={0.2}
           roughness={0.85}
           side={THREE.DoubleSide}
         />
