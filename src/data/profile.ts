@@ -35,7 +35,7 @@ export interface ProfileData {
   monogram: string;
   /** Concise one-line positioning statement beneath your name. */
   tagline: string;
-  /** Current role and company/studio. */
+  /** Current role, degree track, or focus. */
   currentRole: string;
   /** City, region, or alpine coordinates. */
   location: string;
@@ -54,9 +54,9 @@ export interface ProfileData {
     pullQuote: string;
     focusAreas: string[];
   };
-  /** Concise timeline of milestones in your life and career. */
+  /** Concise timeline of milestones in your life and studies. */
   highlights: BioHighlight[];
-  /** Selected projects, research, or writing you want to feature. */
+  /** Selected writing, research, or projects you want to feature. */
   selectedWork: FeaturedWork[];
   /** Contact and social links. */
   links: SocialLink[];
@@ -65,83 +65,80 @@ export interface ProfileData {
 }
 
 export const profile: ProfileData = {
-  name: "Your Name",
-  monogram: "YN",
-  tagline: "Engineer, Designer & Builder of Quiet, Enduring Systems",
-  currentRole: "Staff Software Engineer · Independent Studio",
-  location: "Pacific Northwest · 47.6° N, 122.3° W",
+  name: "Revelle",
+  monogram: "R",
+  tagline: "Polyglot, Biological Anthropology Student & Vivid Descriptive Writer",
+  currentRole: "Undergraduate · B.A. / B.S. in Biological Anthropology",
+  location: "Between Languages, Field Notes & Quiet Ridges",
   elevationLabel: "2,840 M · TIMBERLINE OVERLOOK",
   heroEpigraph:
-    "Notes from the ridge — on craft, technology, and building things meant to outlast the noise.",
+    "Tracing the human story across bone, language, and light—one vivid sentence and open question at a time.",
   seoDescription:
-    "Personal biography and selected work — set atop a golden-hour alpine peak with a weeping tree at the summit.",
+    "Revelle — Polyglot, biological anthropology student, descriptive writer, and philosophical thinker.",
 
   bio: {
     eyebrow: "Life & Work",
-    heading: "Between the treeline and the tools we shape.",
-    lead: "I am a software engineer and creative technologist drawn to the intersection of thoughtful systems, tactile interfaces, and calm, human-scale design.",
+    heading: "Where human origins, language, and vivid prose meet.",
+    lead: "I am Revelle—a polyglot currently acquiring my bachelor's degree in biological anthropology, drawn to the deep arc of human evolution, the texture of lived languages, and the quiet discipline of philosophizing.",
     paragraphs: [
-      "Over the past decade, my work has spanned distributed infrastructure, interactive graphics, and product engineering—helping small teams turn ambitious ideas into software that feels effortless, fast, and enduring. Replace these paragraphs in src/data/profile.ts with your own story, origins, and what drives your craft today.",
-      "Outside of work, I spend my time on high mountain trails, studying how light shifts across granite ridges at dusk, reading essays on architecture and ecology, and sketching small experiments in WebGL and typography.",
+      "Studying biological anthropology lets me look at what makes us human from the ground up: anatomy, adaptation, deep time, and the subtle ways biology and culture braid together across generations. Moving between multiple languages has taught me much the same lesson—that every tongue carries its own geometry of thought, its own way of noticing the world.",
+      "Outside of my coursework, I love writing descriptive prose meant to paint an unmistakable, living picture in the reader's mind—capturing the chill of dusk air, the weight of ancient stone, or the fleeting cadence of an unhurried conversation. When I am not writing or translating ideas between languages, I am usually lost in philosophical questions about meaning, perception, and our place in the natural world.",
     ],
     pullQuote:
-      "Good work, like a tree at the timberline, bends with the wind without losing its roots.",
+      "To speak many languages, study ancient bones, and linger in philosophy is to ask the same question from three different summits: what does it mean to be here?",
     focusAreas: [
-      "Systems Architecture",
-      "Creative Engineering",
-      "Interface Craft",
-      "Real-Time Graphics",
+      "Biological Anthropology",
+      "Polyglot Studies",
+      "Vivid Descriptive Writing",
+      "Philosophy & Inquiry",
     ],
   },
 
   highlights: [
     {
-      period: "2023 — Present",
-      title: "Principal / Staff Engineer",
-      organization: "Your Current Company or Studio",
+      period: "Present",
+      title: "Acquiring Bachelor's Degree",
+      organization: "Biological Anthropology",
       summary:
-        "Leading architecture and interface engineering for flagship web applications, balancing performance with expressive visual craft.",
+        "Focusing on human evolutionary biology, osteology, biocultural adaptation, and the interplay between deep ancestral history and modern human life.",
     },
     {
-      period: "2020 — 2023",
-      title: "Senior Product Engineer",
-      organization: "Previous Organization",
+      period: "Ongoing",
+      title: "Polyglot & Linguistic Explorer",
+      organization: "Multilingual Practice",
       summary:
-        "Built core collaborative tools, real-time data visualizations, and design systems used by tens of thousands of people daily.",
+        "Learning and thinking across multiple languages, exploring how syntax, idiom, and sound shape memory, nuance, and worldview.",
     },
     {
-      period: "2017 — 2020",
-      title: "Software Engineer & Researcher",
-      organization: "Early Career / Lab",
+      period: "Ongoing",
+      title: "Descriptive Writing & Philosophical Essays",
+      organization: "Personal Notebooks",
       summary:
-        "Explored human-computer interaction, graphics pipelines, and developer tooling from prototype to production.",
+        "Crafting sensory, atmospheric passages designed to paint vivid imagery in the mind's eye alongside reflective essays on consciousness, ethics, and wonder.",
     },
   ],
 
   selectedWork: [
     {
-      year: "2025",
-      title: "Atlas of Quiet Interfaces",
-      role: "Creator & Author",
+      year: "Notes",
+      title: "Sketches in Bone & Light",
+      role: "Descriptive Prose",
       description:
-        "An interactive essay series and component study on calm typography, motion physics, and atmospheric web graphics.",
-      href: "https://github.com/Soul750",
+        "Short atmospheric vignettes written to evoke texture, weather, and emotion so clearly the reader can step straight inside the scene.",
     },
     {
-      year: "2024",
-      title: "Timberline Engine",
-      role: "Lead Engineer",
+      year: "Study",
+      title: "On Adaptation & Ancestral Footprints",
+      role: "Biological Anthropology",
       description:
-        "Lightweight procedural terrain and foliage shader toolkit built for responsive browser experiences on constrained devices.",
-      href: "https://github.com/Soul750",
+        "Undergraduate research notes and syntheses examining how environment, migration, and culture shape the human story over millennia.",
     },
     {
-      year: "2023",
-      title: "Field Notes & Open Source",
-      role: "Maintainer",
+      year: "Essays",
+      title: "Untranslatable Rooms",
+      role: "Languages & Philosophy",
       description:
-        "A collection of small utilities, TypeScript libraries, and technical notes shared openly with the developer community.",
-      href: "https://github.com/Soul750",
+        "Philosophical reflections gathered across languages—meditations on perception, solitude, and the ideas only certain tongues know how to name.",
     },
   ],
 
@@ -154,7 +151,7 @@ export const profile: ProfileData = {
     },
     {
       label: "LinkedIn",
-      handle: "in/your-handle",
+      handle: "Connect on LinkedIn",
       href: "https://linkedin.com",
       kind: "linkedin",
     },
@@ -165,12 +162,12 @@ export const profile: ProfileData = {
       kind: "email",
     },
     {
-      label: "Journal",
-      handle: "yourdomain.com",
-      href: "https://github.com/Soul750/summit-bio",
+      label: "Writing",
+      handle: "Field Notes & Essays",
+      href: "#life-and-work",
       kind: "website",
     },
   ],
 
-  footerNote: "Crafted in the quiet hours between golden hour and twilight.",
+  footerNote: "Written between languages, alpine dusk, and unhurried thought.",
 };

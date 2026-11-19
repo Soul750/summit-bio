@@ -61,25 +61,27 @@ export function ForegroundElements({
 
   const { grassData, flowerData } = useMemo(() => {
     const rand = createSeededRandom(8842);
-    const grassCount = lowPower ? 75 : 150;
-    const flowerCount = lowPower ? 18 : 34;
+    const grassCount = lowPower ? 140 : 280;
+    const flowerCount = lowPower ? 26 : 52;
 
     const grass: GrassBladeData[] = [];
     for (let i = 0; i < grassCount; i++) {
-      // Cluster along the foreground overlook edge (left & right framing the view)
-      const cluster = rand() > 0.45 ? -1 : 1;
+      // Cluster along the foreground overlook edge & across the grassy ledge
+      const zone = rand();
       const x =
-        cluster < 0
-          ? -3.4 + rand() * 3.1
-          : 0.6 + rand() * 3.2;
-      const z = 0.8 + rand() * 3.6;
-      const y = -0.82 - (z - 1.2) * 0.08 + (rand() - 0.5) * 0.14;
+        zone < 0.4
+          ? -3.8 + rand() * 3.5
+          : zone < 0.8
+            ? 0.4 + rand() * 3.6
+            : -1.4 + rand() * 2.8;
+      const z = 0.4 + rand() * 4.0;
+      const y = -0.8 - (z - 1.2) * 0.08 + (rand() - 0.5) * 0.16;
       grass.push({
         x,
         y,
         z,
-        scaleX: 0.75 + rand() * 0.65,
-        scaleY: 0.65 + rand() * 0.95,
+        scaleX: 0.78 + rand() * 0.75,
+        scaleY: 0.7 + rand() * 1.05,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
       });
@@ -87,16 +89,16 @@ export function ForegroundElements({
 
     const flowers: GrassBladeData[] = [];
     for (let i = 0; i < flowerCount; i++) {
-      const side = rand() > 0.4 ? -1 : 1;
-      const x = side < 0 ? -2.8 + rand() * 2.3 : 1.0 + rand() * 2.4;
-      const z = 1.2 + rand() * 2.8;
+      const side = rand() > 0.45 ? -1 : 1;
+      const x = side < 0 ? -3.1 + rand() * 2.7 : 0.7 + rand() * 2.8;
+      const z = 0.9 + rand() * 3.1;
       const y = -0.62 - (z - 1.2) * 0.08 + rand() * 0.12;
       flowers.push({
         x,
         y,
         z,
-        scaleX: 0.7 + rand() * 0.5,
-        scaleY: 0.7 + rand() * 0.5,
+        scaleX: 0.7 + rand() * 0.55,
+        scaleY: 0.7 + rand() * 0.55,
         rotY: rand() * Math.PI * 2,
         phase: rand() * Math.PI * 2,
       });

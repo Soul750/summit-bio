@@ -52,7 +52,7 @@ export function WorkAndLinksSection({
                 id="work-heading"
                 className="font-display text-3xl sm:text-4xl font-light text-[#f5efe4]"
               >
-                Projects, systems, and field notes.
+                Writing, studies, and explorations.
               </h2>
             </div>
 
@@ -123,9 +123,9 @@ export function WorkAndLinksSection({
                   Always glad to hear from thoughtful people.
                 </h2>
                 <p className="mt-4 text-sm sm:text-[15px] font-light leading-relaxed text-[#c6bcac]">
-                  Whether you want to talk about engineering, collaborate on a
-                  quietly ambitious idea, or simply trade trail notes, feel free
-                  to reach out.
+                  Whether you want to trade thoughts on biological anthropology,
+                  swap passages in another language, or linger over a good
+                  philosophical question, feel free to reach out.
                 </p>
               </div>
 

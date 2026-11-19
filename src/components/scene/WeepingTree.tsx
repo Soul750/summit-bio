@@ -215,17 +215,17 @@ export function WeepingTree({
         createTaperedBranchGeometry([origin, mid1, mid2, tip], 0.1, 0.022, 16, 6)
       );
 
-      // Sample weeping foliage anchor points along the outer 75% of each bough
+      // Sample weeping foliage anchor points along the outer 78% of each bough
       const curve = new THREE.CatmullRomCurve3([origin, mid1, mid2, tip]);
-      const samples = lowPower ? 7 : 12;
+      const samples = lowPower ? 10 : 18;
       for (let s = 0; s < samples; s++) {
-        const t = 0.24 + (s / (samples - 1)) * 0.76;
+        const t = 0.22 + (s / (samples - 1)) * 0.78;
         const p = curve.getPointAt(t);
         anchorPoints.push(
           new THREE.Vector3(
-            p.x + (rand() - 0.5) * 0.34,
-            p.y + (rand() - 0.5) * 0.14,
-            p.z + (rand() - 0.5) * 0.34
+            p.x + (rand() - 0.5) * 0.4,
+            p.y + (rand() - 0.5) * 0.16,
+            p.z + (rand() - 0.5) * 0.4
           )
         );
       }
@@ -249,22 +249,22 @@ export function WeepingTree({
       );
 
       const subCurve = new THREE.CatmullRomCurve3([mid1, subMid, subTip]);
-      const subSamples = lowPower ? 3 : 5;
+      const subSamples = lowPower ? 5 : 9;
       for (let s = 0; s < subSamples; s++) {
-        const t = 0.3 + (s / (subSamples - 1)) * 0.7;
+        const t = 0.25 + (s / (subSamples - 1)) * 0.75;
         anchorPoints.push(subCurve.getPointAt(t));
       }
     }
 
     // Add crown-top foliage clusters so the silhouette is lush and cohesive
-    const crownCount = lowPower ? 10 : 18;
+    const crownCount = lowPower ? 14 : 28;
     for (let c = 0; c < crownCount; c++) {
       const a = rand() * Math.PI * 2;
-      const r = 0.25 + rand() * 1.15;
+      const r = 0.22 + rand() * 1.35;
       anchorPoints.push(
         new THREE.Vector3(
           0.28 + Math.cos(a) * r,
-          3.55 + rand() * 0.65,
+          3.48 + rand() * 0.75,
           -0.12 + Math.sin(a) * r
         )
       );
@@ -286,8 +286,8 @@ export function WeepingTree({
     for (const anchor of anchorPoints) {
       // Crossed double-ribbon per anchor so strands have rich volume from every camera angle
       const ribbonCount = 2;
-      const length = 1.15 + rand() * 1.45;
-      const width = 0.26 + rand() * 0.22;
+      const length = 1.3 + rand() * 1.65;
+      const width = 0.28 + rand() * 0.24;
       const phase = rand() * Math.PI * 2;
       const swayAmp = 0.18 + rand() * 0.22;
       const baseAngle = rand() * Math.PI;

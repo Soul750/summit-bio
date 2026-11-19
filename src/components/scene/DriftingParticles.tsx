@@ -30,8 +30,8 @@ export function DriftingParticles({
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const timeRef = useRef(0);
 
-  const moteCount = lowPower ? 70 : 150;
-  const leafCount = lowPower ? 18 : 38;
+  const moteCount = lowPower ? 85 : 170;
+  const leafCount = lowPower ? 36 : 78;
 
   const { moteGeometry, moteSeeds, leafData } = useMemo(() => {
     const rand = createSeededRandom(31415);

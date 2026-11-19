@@ -76,7 +76,7 @@ export function BioSection({ reducedMotion }: BioSectionProps) {
                   <Briefcase className="h-4 w-4 text-[#e49b56] mt-0.5 shrink-0" />
                   <div>
                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#9c9487] mb-1">
-                      Current Role
+                      Current Study
                     </p>
                     <p className="text-sm text-[#ebe3d6] leading-relaxed">
                       {profile.currentRole}
